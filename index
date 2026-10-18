@@ -1,0 +1,2036 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b3d2c">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Portal Santri</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+  <style>
+    :root {
+      --paper: #eef2ec;
+      --surface: #ffffff;
+      --ink: #17231d;
+      --muted: #5b6a62;
+      --line: #d7e0d5;
+      --primary: #15803d;
+      --deep: #0b3d2c;
+      --gold: #b7862c;
+      --soft: color-mix(in srgb, var(--primary) 12%, white);
+      --radius-panel: 18px;
+      --radius-cell: 5px;
+      --font: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      --arabic: "Amiri", "Traditional Arabic", "Times New Roman", serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      font-size: 15px;
+      line-height: 1.55;
+      color: var(--ink);
+      background: var(--paper);
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    button, input, select { font: inherit; color: inherit; }
+    :focus-visible { outline: 3px solid color-mix(in srgb, var(--primary) 55%, white); outline-offset: 2px; }
+    [hidden] { display: none !important; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+    /* ================= LOGIN ================= */
+    .login {
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+    }
+    .login-side {
+      position: relative;
+      overflow: hidden;
+      background: var(--deep);
+      color: #eaf3ec;
+      padding: 48px clamp(28px, 5vw, 72px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 40px;
+    }
+    /* pola girih tipis sebagai latar, bukan gradien */
+    .login-side::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: .09;
+      background-image:
+        linear-gradient(45deg, #fff 1px, transparent 1px),
+        linear-gradient(-45deg, #fff 1px, transparent 1px);
+      background-size: 38px 38px;
+      pointer-events: none;
+    }
+    .login-side > * { position: relative; }
+    .brand-row { display: flex; align-items: center; gap: 14px; }
+    .brand-logo {
+      width: 52px; height: 52px; border-radius: 14px;
+      background: #fff; padding: 6px; object-fit: contain; flex: none;
+    }
+    .brand-name { font-weight: 700; font-size: 16px; line-height: 1.25; }
+    .brand-inst { font-size: 13px; opacity: .75; }
+    .login-side .salam {
+      font-family: var(--arabic);
+      font-size: clamp(44px, 6vw, 76px);
+      line-height: 1.3;
+      color: #e9cf95;
+      margin: 0 0 18px;
+      direction: rtl;
+      text-align: left;
+    }
+    .login-side h1 {
+      font-size: clamp(30px, 3.6vw, 44px);
+      line-height: 1.12;
+      letter-spacing: -.02em;
+      margin: 0 0 14px;
+      font-weight: 800;
+    }
+    .login-side p:not(.salam) { margin: 0; max-width: 34ch; font-size: 16px; opacity: .85; }
+    .login-foot { font-size: 13px; opacity: .6; }
+
+    .login-main {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+    }
+    .login-form { width: 100%; max-width: 380px; }
+    .login-form h2 { font-size: 24px; margin: 0 0 6px; letter-spacing: -.01em; }
+    .login-form .lead { color: var(--muted); margin: 0 0 28px; }
+    .field-label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 8px; }
+    .id-input {
+      display: flex;
+      align-items: stretch;
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface);
+      overflow: hidden;
+      transition: border-color .15s;
+    }
+    .id-input:focus-within { border-color: var(--primary); }
+    .id-prefix {
+      display: flex; align-items: center;
+      padding: 0 12px 0 16px;
+      font-weight: 700;
+      color: var(--primary);
+      background: var(--soft);
+      letter-spacing: .02em;
+    }
+    .id-input input {
+      flex: 1; min-width: 0;
+      border: 0; outline: 0;
+      padding: 14px 14px;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      background: transparent;
+    }
+    .hint { font-size: 13px; color: var(--muted); margin: 10px 0 20px; }
+    .check { display: flex; align-items: center; gap: 10px; font-size: 14px; margin-bottom: 22px; cursor: pointer; }
+    .check input { width: 18px; height: 18px; accent-color: var(--primary); }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      border: 0; cursor: pointer;
+      border-radius: 12px;
+      padding: 13px 20px;
+      font-weight: 700;
+      background: var(--primary);
+      color: #fff;
+      transition: filter .15s, transform .05s;
+    }
+    .btn:hover { filter: brightness(1.06); }
+    .btn:active { transform: translateY(1px); }
+    .btn-block { width: 100%; font-size: 16px; padding: 15px 20px; }
+    .btn-ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--line); }
+    .btn-ghost:hover { background: var(--surface); filter: none; }
+    .btn-sm { padding: 8px 12px; font-size: 13px; border-radius: 10px; }
+
+    /* ================= DASHBOARD ================= */
+    .topbar {
+      position: sticky;
+      top: env(safe-area-inset-top, 0px);
+      z-index: 10;
+      background: color-mix(in srgb, var(--paper) 88%, transparent);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+    .topbar-inner {
+      max-width: 1120px; margin: 0 auto;
+      padding: 12px 20px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .topbar .brand-logo { width: 38px; height: 38px; border-radius: 10px; padding: 4px; border: 1px solid var(--line); }
+    .topbar .brand-name { font-size: 14px; }
+    .topbar .brand-inst { font-size: 12px; opacity: 1; color: var(--muted); }
+    .top-actions { display: flex; gap: 8px; }
+
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 28px 20px 48px; }
+
+    .identity {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px 32px;
+      align-items: end;
+      margin-bottom: 28px;
+    }
+    .greet { color: var(--muted); font-size: 15px; margin: 0 0 2px; }
+    .identity h1 {
+      font-size: clamp(28px, 4.4vw, 42px);
+      line-height: 1.1;
+      letter-spacing: -.025em;
+      margin: 0 0 12px;
+      font-weight: 800;
+    }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      background: var(--surface);
+      border: 1px solid var(--line);
+    }
+    .chip-ok { background: var(--soft); border-color: transparent; color: var(--deep); }
+    .chip-warn { background: #fdf3dc; border-color: transparent; color: #7a5410; }
+    .chip-id { font-variant-numeric: tabular-nums; letter-spacing: .04em; cursor: pointer; }
+    .chip-id:hover { border-color: var(--primary); }
+    .period-box label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; font-weight: 600; }
+    .period-box select {
+      min-width: 220px;
+      padding: 10px 38px 10px 14px;
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235b6a62' stroke-width='2' fill='none'/%3E%3C/svg%3E") no-repeat right 14px center;
+      appearance: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-panel);
+      padding: 24px;
+    }
+    .panel + .panel, .grid-2 + .panel, .panel + .grid-2 { margin-top: 20px; }
+    .panel h2 { font-size: 18px; margin: 0; letter-spacing: -.01em; }
+    .panel-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
+    .panel-sub { color: var(--muted); font-size: 13px; margin: 2px 0 0; }
+
+    /* ---- Peta 30 juz: elemen utama ---- */
+    .mushaf {
+      background: var(--deep);
+      color: #eaf3ec;
+      border: 0;
+      padding: 28px;
+    }
+    .mushaf .panel-sub { color: rgba(234,243,236,.7); }
+    .mushaf-top {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 24px;
+      align-items: end;
+      margin-bottom: 22px;
+    }
+    .juz-big { font-size: clamp(44px, 7vw, 68px); font-weight: 800; line-height: 1; letter-spacing: -.03em; }
+    .juz-big small { font-size: 18px; font-weight: 600; letter-spacing: 0; opacity: .75; margin-left: 6px; }
+    .juz-caption { margin-top: 8px; font-size: 14px; opacity: .8; }
+    .figs { display: flex; gap: 28px; }
+    .fig { text-align: right; }
+    .fig b { display: block; font-size: 26px; line-height: 1.1; font-weight: 800; }
+    .fig span { font-size: 13px; opacity: .72; }
+
+    .juz-grid {
+      display: grid;
+      grid-template-columns: repeat(15, minmax(0, 1fr));
+      gap: 6px;
+    }
+    .juz-cell {
+      aspect-ratio: 1 / 1.15;
+      border-radius: var(--radius-cell);
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.04);
+      color: rgba(234,243,236,.55);
+      font-size: 13px;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      padding: 0;
+      font-variant-numeric: tabular-nums;
+    }
+  .juz-cell.mur {
+  background: #e9cf95;
+  border-color: #e9cf95;
+  color: var(--deep);
+}
+
+.juz-cell.ziy {
+  background: repeating-linear-gradient(135deg, rgba(233,207,149,.28) 0 4px, transparent 4px 8px);
+  border-color: rgba(233,207,149,.55);
+  color: #f3e3bd;
+}
+    .juz-cell.mur-progress { background: #236a57; border: 2px dashed #a9dcc7; color: #fff; }
+    .juz-cell { flex-direction: column; gap: 3px; }
+    .juz-cell small { font-size: 10px; font-weight: 500; }
+    .legend .l-progress { background: #236a57; border: 2px dashed #a9dcc7; }
+    .juz-cell:hover { outline: 2px solid #fff; outline-offset: 1px; }
+    .legend { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 16px; font-size: 13px; opacity: .85; }
+    .legend i { display: inline-block; width: 14px; height: 14px; border-radius: 4px; vertical-align: -2px; margin-right: 6px; }
+   .legend .l-ziy {
+  background: repeating-linear-gradient(135deg, rgba(233,207,149,.6) 0 3px, transparent 3px 6px);
+  border:1px solid rgba(233,207,149,.6);
+}
+
+.legend .l-mur {
+  background:#e9cf95;
+}
+    .legend .l-none { border: 1px solid rgba(255,255,255,.3); }
+
+    /* ---- Tiga jalur setoran ---- */
+    .tracks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .track { padding: 4px 24px; }
+    .track:first-child { padding-left: 0; }
+    .track:last-child { padding-right: 0; }
+    .track + .track { border-left: 1px solid var(--line); }
+    .track h3 { margin: 0 0 12px; font-size: 15px; font-weight: 700; color: var(--muted); }
+    .track .num { font-size: 34px; font-weight: 800; line-height: 1; letter-spacing: -.02em; }
+    .track .num small { font-size: 14px; font-weight: 600; color: var(--muted); margin-left: 4px; letter-spacing: 0; }
+    .track dl { margin: 16px 0 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; font-size: 14px; }
+    .track dt { color: var(--muted); }
+    .track dd { margin: 0; font-weight: 600; text-align: right; }
+    .bar { height: 8px; background: var(--paper); border-radius: 999px; overflow: hidden; margin-top: 14px; }
+    .bar > span { display: block; height: 100%; background: var(--primary); border-radius: inherit; }
+    .bar-note { font-size: 13px; color: var(--muted); margin-top: 6px; }
+
+    .grid-2 { display: grid; grid-template-columns: 1.35fr 1fr; gap: 20px; margin-top: 20px; }
+    .grid-2 > .panel { margin-top: 0; }
+
+    /* ---- Arbain ---- */
+    .hadits-grid { display: grid; grid-template-columns: repeat(21, minmax(0, 1fr)); gap: 6px; }
+    .h-cell {
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border: 1.5px solid var(--line);
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--muted);
+      display: flex; align-items: center; justify-content: center;
+      font-variant-numeric: tabular-nums;
+    }
+    .h-cell.on { background: var(--primary); border-color: var(--primary); color: #fff; }
+
+    /* ---- Target & catatan ---- */
+    .note {
+      border-left: 3px solid var(--gold);
+      padding: 4px 0 4px 16px;
+      margin: 0;
+      font-size: 15px;
+      white-space: pre-line;
+    }
+    .note-empty { color: var(--muted); font-size: 14px; }
+    .kv { display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; margin: 0 0 18px; font-size: 14px; }
+    .kv dt { color: var(--muted); }
+    .kv dd { margin: 0; font-weight: 600; }
+
+    /* ---- Aktivitas bulanan ---- */
+    .chart { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-template-rows: 1fr; gap: 14px; align-items: end; height: 190px; padding-top: 10px; }
+    .col { display: flex; flex-direction: column; align-items: stretch; height: 100%; justify-content: flex-end; gap: 6px; }
+    .stack { display: flex; flex-direction: column-reverse; border-radius: 8px 8px 3px 3px; overflow: hidden; min-height: 3px; background: var(--paper); }
+    .stack span { display: block; }
+    .s-ziy { background: var(--primary); }
+    .s-mur { background: color-mix(in srgb, var(--primary) 45%, white); }
+    .s-had { background: var(--gold); }
+    .col-total { text-align: center; font-weight: 700; font-size: 13px; font-variant-numeric: tabular-nums; }
+    .col-label { text-align: center; font-size: 12px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 6px; }
+    .chart-legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--muted); margin-top: 14px; }
+    .chart-legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+
+    /* ---- Riwayat ---- */
+    .toolbar { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+    .seg { display: inline-flex; background: var(--paper); border-radius: 12px; padding: 4px; gap: 2px; flex-wrap: wrap; }
+    .seg button {
+      border: 0; background: transparent; cursor: pointer;
+      padding: 7px 14px; border-radius: 9px; font-size: 14px; font-weight: 600; color: var(--muted);
+    }
+    .seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(23,35,29,.12); }
+    .search {
+      flex: 1; min-width: 180px;
+      padding: 9px 14px;
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface);
+    }
+    .search:focus { outline: 0; border-color: var(--primary); }
+    .rows { list-style: none; margin: 0; padding: 0; }
+    .row {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      padding: 12px 8px;
+      border-top: 1px solid var(--line);
+      cursor: pointer;
+      border-radius: 8px;
+    }
+    .row:hover { background: var(--paper); }
+    .row-date { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+    .row-date b { display: block; color: var(--ink); font-size: 14px; }
+    .row-main { min-width: 0; }
+    .row-title { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .row-meta { font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .kind { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; }
+    .k-ziyadah { background: var(--primary); }
+    .k-murojaah { background: color-mix(in srgb, var(--primary) 45%, white); }
+    .k-hadits { background: var(--gold); }
+    .grade {
+      min-width: 44px; text-align: center;
+      padding: 4px 10px; border-radius: 999px;
+      background: var(--soft); color: var(--deep);
+      font-weight: 800; font-size: 13px;
+    }
+    .empty { text-align: center; color: var(--muted); padding: 32px 12px; border-top: 1px solid var(--line); }
+    .more { display: flex; justify-content: center; margin-top: 16px; }
+
+    .foot { text-align: center; color: var(--muted); font-size: 13px; padding: 28px 16px 0; }
+
+    /* ---- SweetAlert tema ---- */
+    .swal2-popup { font-family: var(--font) !important; border-radius: 20px !important; color: var(--ink) !important; }
+    .swal2-title { font-size: 21px !important; letter-spacing: -.01em; }
+    .swal2-html-container { font-size: 15px !important; color: var(--muted) !important; }
+    .swal2-styled.swal2-confirm { background: var(--primary) !important; border-radius: 12px !important; font-weight: 700 !important; }
+    .swal2-styled.swal2-cancel { background: var(--paper) !important; color: var(--ink) !important; border-radius: 12px !important; font-weight: 700 !important; }
+    .swal2-styled:focus { box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 35%, white) !important; }
+    .swal2-loader { border-color: var(--primary) transparent var(--primary) transparent !important; }
+    .detail-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; color: var(--ink); }
+    .detail-table th { color: var(--muted); font-weight: 500; padding: 8px 10px 8px 0; width: 38%; vertical-align: top; }
+    .detail-table td { font-weight: 600; padding: 8px 0; }
+    .detail-table tr + tr th, .detail-table tr + tr td { border-top: 1px solid var(--line); }
+    .juz-list { list-style: none; padding: 0; margin: 0; text-align: left; max-height: 300px; overflow: auto; }
+    .juz-list li { padding: 9px 0; border-top: 1px solid var(--line); font-size: 14px; color: var(--ink); display: flex; justify-content: space-between; gap: 12px; }
+    .juz-list li span { color: var(--muted); }
+
+    .identity .profile-row { display: flex; align-items: center; gap: 14px; margin: 0 0 12px; }
+.identity .profile-row h1 { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.identity .profile-info { flex: 1; min-width: 0; }
+.identity .profile-ranks { margin-top: 8px; }
+.avatar { position: relative; flex: none; width: 76px; height: 76px; border-radius: 50%; border: 2px solid var(--surface); background: var(--soft); color: var(--deep); font-weight: 800; font-size: 26px; padding: 0; cursor: pointer; box-shadow: 0 0 0 1px var(--line); }
+.avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
+.avatar .cam { position: absolute; right: -3px; bottom: -3px; width: 26px; height: 26px; border-radius: 50%; background: var(--surface); color: var(--primary); border: 2px solid var(--primary); display: grid; place-items: center; }
+.crop-canvas { display: block; width: 100%; max-width: 280px; aspect-ratio: 1; margin: 8px auto; border-radius: 12px; touch-action: none; cursor: grab; background: #f1f5f9; }
+.crop-zoom { width: 100%; max-width: 280px; }
+@media (max-width: 760px) { .avatar { width: 64px; height: 64px; font-size: 22px; } }
+
+    /* ================= RESPONSIF ================= */
+    @media (max-width: 900px) {
+      .login { grid-template-columns: 1fr; }
+      .login-side { padding: 32px 24px 36px; gap: 28px; }
+      .login-side .salam { font-size: 44px; margin-bottom: 8px; }
+      .login-side p:not(.salam) { font-size: 15px; }
+      .login-foot { display: none; }
+      .login-main { padding: 32px 20px 48px; align-items: flex-start; }
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 760px) {
+      .wrap { padding: 20px 14px 40px; }
+      .topbar-inner { padding: 10px 14px; }
+      .top-actions .label { display: none; }
+      .identity { grid-template-columns: 1fr; }
+      .period-box select { width: 100%; }
+      .panel { padding: 20px 16px; }
+      .mushaf { padding: 22px 16px; }
+      .mushaf-top { grid-template-columns: 1fr; }
+      .figs { gap: 24px; }
+      .fig { text-align: left; }
+      .juz-grid { grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 5px; }
+      .tracks { grid-template-columns: 1fr; }
+      .track, .track:first-child, .track:last-child { padding: 18px 0; }
+      .track + .track { border-left: 0; border-top: 1px solid var(--line); }
+      .track:first-child { padding-top: 0; }
+      .track:last-child { padding-bottom: 0; }
+      .hadits-grid { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+      .h-cell { font-size: 12px; }
+      .chart { gap: 8px; height: 170px; }
+      .row { grid-template-columns: 76px minmax(0, 1fr) auto; gap: 10px; padding: 12px 4px; }
+      .seg { width: 100%; }
+      .seg button { flex: 1; padding: 7px 8px; }
+    }
+    @media (min-width: 761px) and (max-width: 1000px) {
+      .hadits-grid { grid-template-columns: repeat(14, minmax(0, 1fr)); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; animation: none !important; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      .topbar, .toolbar, .more, .period-box { display: none !important; }
+      .panel { break-inside: avoid; }
+      .mushaf { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  .rank-loading { display: inline-flex; align-items: center; gap: 8px; }
+.rank-skeleton { display: inline-block; width: 34px; height: 14px; border-radius: 6px; background: linear-gradient(90deg, var(--line), var(--surface), var(--line)); background-size: 200% 100%; animation: rank-shimmer 1.4s ease-in-out infinite; }
+@keyframes rank-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+@media (prefers-reduced-motion: reduce) { .rank-skeleton { animation: none; } }
+</style>
+</head>
+<body>
+
+  <!-- ================= HALAMAN MASUK ================= -->
+  <main id="loginView" class="login" hidden>
+    <section class="login-side" aria-hidden="false">
+      <div class="brand-row">
+        <img class="brand-logo js-logo" alt="" hidden>
+        <div>
+          <div class="brand-name js-app-name">SIM Al-Qur'an IBS</div>
+          <div class="brand-inst js-inst"></div>
+        </div>
+      </div>
+
+      <div>
+        <p class="salam" lang="ar">أَهْلًا وَسَهْلًا</p>
+        <h1>Portal Hafalan Santri</h1>
+        <p>Pantau hafalan Al-Qur'an dan hadits, lihat riwayat setoran, dan baca catatan dari muhafizh kapan saja.</p>
+      </div>
+
+      <div class="login-foot js-footer"></div>
+    </section>
+
+    <section class="login-main">
+      <form id="loginForm" class="login-form" novalidate>
+        <h2>Masuk</h2>
+        <p class="lead">Gunakan ID santri yang terdaftar di sistem.</p>
+
+        <label class="field-label" for="santriIdInput">ID santri</label>
+        <div class="id-input">
+          <span class="id-prefix" aria-hidden="true">SNT-</span>
+          <input id="santriIdInput" name="santriId" type="text"
+                 inputmode="text" autocomplete="username" autocapitalize="characters"
+                 spellcheck="false" maxlength="40" placeholder="1A2B3C4D5E6F"
+                 aria-describedby="idHint" required>
+        </div>
+        <p id="idHint" class="hint">ID tertera di QR Code Santri. Belum tahu ID-nya? Tanyakan ke muhafizh atau admin.</p>
+
+        <label class="check">
+          <input id="rememberInput" type="checkbox">
+          Ingat ID di perangkat ini
+        </label>
+
+        <button class="btn btn-block" type="submit">Masuk</button>
+      </form>
+    </section>
+  </main>
+
+  <input id="fotoInput" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.heic,.heif" hidden>
+
+  <!-- ================= DASHBOARD ================= -->
+  <div id="appView" hidden>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand-row">
+          <img class="brand-logo js-logo" alt="" hidden>
+          <div>
+            <div class="brand-name js-app-name">SIM Al-Qur'an IBS</div>
+            <div class="brand-inst js-inst"></div>
+          </div>
+        </div>
+        <div class="top-actions">
+          <button class="btn btn-ghost btn-sm" type="button" id="refreshBtn" title="Muat ulang data">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+            <span class="label">Muat ulang</span>
+          </button>
+          <button class="btn btn-ghost btn-sm" type="button" id="printBtn" title="Cetak halaman">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 9V3h12v6"/><rect x="6" y="14" width="12" height="7"/><path d="M6 18H4a1 1 0 0 1-1-1v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a1 1 0 0 1-1 1h-2"/></svg>
+            <span class="label">Cetak</span>
+          </button>
+          <button class="btn btn-sm" type="button" id="logoutBtn">Keluar</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="wrap" id="dashboard"></main>
+  </div>
+
+  <script>
+  (function () {
+    "use strict";
+
+    /* =========================================================
+     * KONFIGURASI
+     * Tempel URL Web App Apps Script (yang berakhiran /exec).
+     * ========================================================= */
+    var CONFIG = {
+      API_URL: "https://script.google.com/macros/s/AKfycbxv29VDLzUWt-J6rEL-KcqylOGqilnPiijfibo-xj6mX7Pu3kAz6l1av9OkMddtX_Kw-Q/exec",
+      TIMEOUT_MS: 45000,
+      SESSION_KEY: "simSantriPortal.session",
+      BRAND_KEY: "simSantriPortal.brand",
+      PAGE_SIZE: 20
+    };
+
+    var state = {
+      santriId: "",
+      data: null,
+      filter: "all",
+      query: "",
+      shown: CONFIG.PAGE_SIZE
+    };
+
+    var $ = function (sel, root) { return (root || document).querySelector(sel); };
+    var $$ = function (sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); };
+
+    /* ---------- SweetAlert preset ---------- */
+    var Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 2600,
+      timerProgressBar: true
+    });
+
+    function showLoading(title, text) {
+      Swal.fire({
+        title: title,
+        text: text || "",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        showConfirmButton: false,
+        didOpen: function () { Swal.showLoading(); }
+      });
+    }
+
+    /* ---------- Util ---------- */
+    function esc(v) {
+      return String(v == null ? "" : v)
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+    }
+    function num(v, digits) {
+      var n = Number(v);
+      if (!isFinite(n)) return "0";
+      return n.toLocaleString("id-ID", { maximumFractionDigits: digits == null ? 1 : digits });
+    }
+    function clean(v) {
+      var s = String(v == null ? "" : v).trim();
+      return s === "-" ? "" : s;
+    }
+    function normalizeId(raw) {
+      var s = String(raw || "").toUpperCase().replace(/\s+/g, "");
+      s = s.replace(/^SNT-?/, "");
+      s = s.replace(/[^A-Z0-9]/g, "");
+      return s ? "SNT-" + s : "";
+    }
+    function isHex(c) { return /^#[0-9a-f]{3}([0-9a-f]{3})?$/i.test(String(c || "").trim()); }
+    function firstName(name) { return String(name || "").trim().split(/\s+/)[0] || ""; }
+
+    function readStore(key) {
+      try {
+        var v = localStorage.getItem(key) || sessionStorage.getItem(key);
+        return v ? JSON.parse(v) : null;
+      } catch (e) { return null; }
+    }
+    function writeSession(id, remember) {
+      try {
+        var payload = JSON.stringify({ id: id, remember: !!remember });
+        localStorage.removeItem(CONFIG.SESSION_KEY);
+        sessionStorage.removeItem(CONFIG.SESSION_KEY);
+        (remember ? localStorage : sessionStorage).setItem(CONFIG.SESSION_KEY, payload);
+      } catch (e) { }
+    }
+    function clearSession() {
+      try {
+        localStorage.removeItem(CONFIG.SESSION_KEY);
+        sessionStorage.removeItem(CONFIG.SESSION_KEY);
+      } catch (e) { }
+    }
+
+    /* ---------- Branding ---------- */
+    function applyBranding(b) {
+      if (!b) return;
+      var root = document.documentElement.style;
+      if (isHex(b.primaryColor)) root.setProperty("--primary", b.primaryColor);
+      if (isHex(b.sidebarColor)) {
+        root.setProperty("--deep", b.sidebarColor);
+        var meta = $('meta[name="theme-color"]');
+        if (meta) meta.setAttribute("content", b.sidebarColor);
+      }
+      $$(".js-app-name").forEach(function (el) { el.textContent = b.appName || "SIM Al-Qur'an IBS"; });
+      $$(".js-inst").forEach(function (el) { el.textContent = b.institutionName || ""; });
+      $$(".js-footer").forEach(function (el) { el.textContent = b.footerText || ""; });
+      $$(".js-logo").forEach(function (img) {
+        if (b.logoUrl) {
+          img.onerror = function () { img.hidden = true; };
+          img.onload = function () { img.hidden = false; };
+          img.src = b.logoUrl;
+        } else {
+          img.hidden = true;
+        }
+      });
+      document.title = "Portal Santri | " + (b.appName || "SIM Al-Qur'an IBS");
+      try { localStorage.setItem(CONFIG.BRAND_KEY, JSON.stringify(b)); } catch (e) { }
+    }
+
+    /* ---------- API ---------- */
+    function PortalError(code, message) { this.code = code; this.message = message; }
+
+    function callApi(body) {
+      if (!/^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec/.test(CONFIG.API_URL) ||
+          CONFIG.API_URL.indexOf("GANTI_DENGAN") >= 0) {
+        return Promise.reject(new PortalError("CONFIG",
+          "Alamat server portal belum diatur. Admin perlu mengisi API_URL di file santri/index.html."));
+      }
+
+      var ctrl = typeof AbortController !== "undefined" ? new AbortController() : null;
+      var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, CONFIG.TIMEOUT_MS);
+
+      return fetch(CONFIG.API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(body),
+        redirect: "follow",
+        signal: ctrl ? ctrl.signal : undefined
+      })
+        .then(function (res) { return res.text(); })
+        .then(function (text) {
+          try { return JSON.parse(text); }
+          catch (e) {
+            throw new PortalError("PARSE",
+              "Server membalas dengan format yang tidak dikenali. Pastikan kode portal santri sudah dipasang dan Web App sudah di-deploy versi baru.");
+          }
+        })
+        .catch(function (err) {
+          if (err instanceof PortalError) throw err;
+          if (err && err.name === "AbortError") {
+            throw new PortalError("TIMEOUT", "Server terlalu lama merespons. Periksa koneksi lalu coba lagi.");
+          }
+          throw new PortalError("NETWORK", "Tidak bisa terhubung ke server. Periksa koneksi internet kamu.");
+        })
+        .finally(function () { clearTimeout(timer); });
+    }
+
+    var ERROR_TITLE = {
+      EMPTY: "ID belum diisi",
+      FORMAT: "Format ID belum sesuai",
+      NOT_FOUND: "ID tidak ditemukan",
+      NO_ACCESS: "Akses belum dibuka",
+      BUSY: "Tunggu sebentar",
+      DISABLED: "Portal sedang ditutup",
+      CONFIG: "Portal belum siap",
+      TIMEOUT: "Koneksi lambat",
+      NETWORK: "Tidak ada koneksi",
+      PARSE: "Server belum siap"
+    };
+
+    /* ---------- Log masuk portal (berjalan setelah dashboard tampil) ----------
+     * Format Device Info sama dengan Log_Login aplikasi utama.
+     * Semua pengumpulan data (merk, model, IP, lokasi IP) dilakukan
+     * SETELAH dashboard tampil dan tidak pernah ditunggu oleh santri.
+     */
+    var CLIENT_ID_KEY = "simSantriPortal.clientId";
+
+    function makeEventId() {
+      try {
+        if (window.crypto && crypto.randomUUID) return crypto.randomUUID().replace(/-/g, "");
+      } catch (e) { }
+      return Date.now().toString(36) + Math.random().toString(36).slice(2, 12);
+    }
+
+    function makeUuid() {
+      try {
+        if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+      } catch (e) { }
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (ch) {
+        var r = Math.random() * 16 | 0;
+        return (ch === "x" ? r : (r & 3 | 8)).toString(16);
+      });
+    }
+
+    /* ID tetap per perangkat/browser, disimpan di localStorage */
+    function getClientId() {
+      try {
+        var id = localStorage.getItem(CLIENT_ID_KEY);
+        if (!id || !/^[A-Za-z0-9-]{16,64}$/.test(id)) {
+          id = makeUuid();
+          localStorage.setItem(CLIENT_ID_KEY, id);
+        }
+        return id;
+      } catch (e) {
+        return makeUuid();
+      }
+    }
+
+    /* Nilai tag tidak boleh mengandung [ ] < > atau baris baru */
+    function tagSafe(v) {
+      var s = String(v == null ? "" : v).replace(/[\[\]<>\r\n]/g, " ").replace(/\s+/g, " ").trim();
+      return s || "-";
+    }
+
+    function withTimeout(promise, ms, fallback) {
+      return new Promise(function (resolve) {
+        var done = false;
+        var t = setTimeout(function () { if (!done) { done = true; resolve(fallback); } }, ms);
+        Promise.resolve(promise).then(function (v) {
+          if (!done) { done = true; clearTimeout(t); resolve(v); }
+        }, function () {
+          if (!done) { done = true; clearTimeout(t); resolve(fallback); }
+        });
+      });
+    }
+
+    /* Data tambahan dari Chrome/Edge/Android: model HP, versi OS, arsitektur */
+    function getHighEntropy() {
+      var uad = navigator.userAgentData;
+      if (!uad || !uad.getHighEntropyValues) return Promise.resolve({});
+      return withTimeout(
+        uad.getHighEntropyValues(["platform", "platformVersion", "architecture", "bitness", "model", "fullVersionList", "mobile"]),
+        1500, {}
+      );
+    }
+
+    function fetchJson(url, ms) {
+      var ctrl = typeof AbortController !== "undefined" ? new AbortController() : null;
+      var t = setTimeout(function () { if (ctrl) ctrl.abort(); }, ms);
+      return fetch(url, { cache: "no-store", signal: ctrl ? ctrl.signal : undefined })
+        .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+        .finally(function () { clearTimeout(t); });
+    }
+
+    /* IP publik, lokasi IP, dan ISP. Sama seperti login utama: ipapi.co, cadangan ipify */
+    function getNetworkInfo() {
+      var info = { ip: "", loc: "", isp: "", tz: "" };
+      return fetchJson("https://ipapi.co/json/", 4000)
+        .then(function (d) {
+          if (!d || d.error) throw new Error("ipapi");
+          info.ip = d.ip || "";
+          info.loc = [d.city, d.region, d.country_name].filter(Boolean).join(", ");
+          info.isp = d.org || d.asn || "";
+          info.tz = d.timezone || "";
+          return info;
+        })
+        .catch(function () {
+          return fetchJson("https://api.ipify.org?format=json", 3000)
+            .then(function (d) { info.ip = (d && d.ip) || ""; return info; })
+            .catch(function () { return info; });
+        });
+    }
+
+    /* Merk dari kode model. Kode model Android jarang menyebut merk secara langsung. */
+    function detectBrand(model, ua) {
+      var m = String(model || "");
+      var rules = [
+        [/^SM-|^GT-|^SCH-|Galaxy|Samsung/i, "Samsung"],
+        [/^RMX|realme/i, "realme"],
+        [/^CPH|^OPPO|^PH[A-Z]M/i, "OPPO"],
+        [/^V2\d{3}|^vivo|^I2\d{3}/i, "vivo"],
+        [/Redmi|POCO|^Mi |^MI |Xiaomi|^M2\d{3}|^2\d{3}[0-9A-Z]{4,}|^\d{5}[A-Z0-9]{3,}/i, "Xiaomi"],
+        [/Infinix|^X6\d{2}/i, "Infinix"],
+        [/TECNO/i, "Tecno"],
+        [/itel/i, "itel"],
+        [/Pixel/i, "Google"],
+        [/moto|Motorola|^XT\d/i, "Motorola"],
+        [/ASUS|ZenFone|ROG/i, "ASUS"],
+        [/Nokia|^TA-\d/i, "Nokia"],
+        [/HUAWEI|^HONOR|^[A-Z]{3}-(L|AL|LX|NX)\d/i, "Huawei/Honor"],
+        [/OnePlus|^KB2|^LE2|^NE2|^IN2|^HD1/i, "OnePlus"],
+        [/Lenovo|^TB-/i, "Lenovo"],
+        [/^LM-|^LG/i, "LG"],
+        [/Advan/i, "Advan"],
+        [/Nothing|^A06[35]/i, "Nothing"]
+      ];
+      for (var i = 0; i < rules.length; i++) if (rules[i][0].test(m)) return rules[i][1];
+      if (/iPhone|iPad|iPod|Macintosh/i.test(ua)) return "Apple";
+      return "";
+    }
+
+    function buildDeviceInfo(he, net) {
+      var ua = navigator.userAgent || "";
+      var uad = navigator.userAgentData || null;
+      var touch = navigator.maxTouchPoints || 0;
+      var match;
+
+      /* Jenis perangkat */
+      var type = "Desktop";
+      if (/iPad|Tablet|PlayBook|Silk/i.test(ua) || (/Android/i.test(ua) && !/Mobile/i.test(ua)) ||
+          (/Macintosh/i.test(ua) && touch > 1)) type = "Tablet";
+      else if ((he.mobile === true) || (uad && uad.mobile) || /Mobi|iPhone|iPod|Android.*Mobile/i.test(ua)) type = "Mobile";
+
+      /* OS dan versinya */
+      var os = "-", osVer = "";
+      if (/Android/i.test(ua)) { os = "Android"; osVer = (ua.match(/Android\s([\d.]+)/i) || [])[1] || ""; }
+      else if (/iPhone|iPod/i.test(ua)) { os = "iOS"; }
+      else if (/iPad/i.test(ua) || (/Macintosh/i.test(ua) && touch > 1)) { os = "iPadOS"; }
+      else if (/Windows/i.test(ua)) { os = "Windows"; }
+      else if (/CrOS/i.test(ua)) { os = "ChromeOS"; }
+      else if (/Macintosh|Mac OS/i.test(ua)) { os = "macOS"; }
+      else if (/Linux/i.test(ua)) { os = "Linux"; }
+      if (os === "iOS" || os === "iPadOS") {
+        match = ua.match(/OS (\d+)[_.](\d+)(?:[_.](\d+))?/i) || ua.match(/Version\/([\d.]+)/i);
+        if (match) osVer = match[2] ? match[1] + "." + match[2] + (match[3] ? "." + match[3] : "") : match[1];
+      }
+      if (he.platformVersion) osVer = he.platformVersion;
+
+      /* Browser dan versinya. Aplikasi dalam (in-app) dicek dulu. */
+      var browser = "-", bVer = "";
+      var inApp = [
+        [/FBAN|FBAV|FB_IAB/i, "Facebook", /FBAV\/([\d.]+)/i],
+        [/Instagram/i, "Instagram", /Instagram ([\d.]+)/i],
+        [/TikTok|musical_ly|BytedanceWebview/i, "TikTok", /(?:TikTok|musical_ly)[ _\/]([\d.]+)/i],
+        [/\bLine\//i, "LINE", /Line\/([\d.]+)/i]
+      ];
+      for (var i = 0; i < inApp.length; i++) {
+        if (inApp[i][0].test(ua)) {
+          browser = inApp[i][1] + " (in-app)";
+          bVer = (ua.match(inApp[i][2]) || [])[1] || "";
+          break;
+        }
+      }
+      if (browser === "-" && he.fullVersionList && he.fullVersionList.length) {
+        var names = { "Microsoft Edge": "Edge", "Google Chrome": "Chrome", "Opera": "Opera", "Opera GX": "Opera GX",
+          "Samsung Internet": "Samsung Internet", "Brave": "Brave", "YaBrowser": "Yandex", "Android WebView": "Android WebView" };
+        var picked = null;
+        he.fullVersionList.forEach(function (b) {
+          if (!picked && names[b.brand]) picked = { name: names[b.brand], ver: b.version };
+        });
+        if (!picked) he.fullVersionList.forEach(function (b) {
+          if (!picked && b.brand === "Chromium") picked = { name: "Chromium", ver: b.version };
+        });
+        if (picked) { browser = picked.name; bVer = picked.ver; }
+      }
+      if (browser === "-") {
+        var rules = [
+          [/Edg(?:e|A|iOS)?\/([\d.]+)/i, "Edge"],
+          [/(?:OPR|Opera)\/([\d.]+)/i, "Opera"],
+          [/SamsungBrowser\/([\d.]+)/i, "Samsung Internet"],
+          [/UCBrowser\/([\d.]+)/i, "UC Browser"],
+          [/MiuiBrowser\/([\d.]+)/i, "Mi Browser"],
+          [/(?:Firefox|FxiOS)\/([\d.]+)/i, "Firefox"],
+          [/CriOS\/([\d.]+)/i, "Chrome"],
+          [/; wv\).*Chrome\/([\d.]+)/i, "Android WebView"],
+          [/Chrome\/([\d.]+)/i, "Chrome"],
+          [/Version\/([\d.]+).*Safari/i, "Safari"]
+        ];
+        for (var j = 0; j < rules.length; j++) {
+          match = ua.match(rules[j][0]);
+          if (match) { browser = rules[j][1]; bVer = match[1]; break; }
+        }
+      }
+
+      /* Model: dari Client Hints dulu, lalu dari user agent lama */
+      var model = he.model || "";
+      if (!model) {
+        match = ua.match(/Android[^;)]*;\s*([^;)]+?)(?:\s+Build\/|\))/i);
+        if (match && match[1] && match[1] !== "K" && !/^(wv|Linux|U)$/i.test(match[1])) model = match[1];
+      }
+      if (!model && /iPhone/i.test(ua)) model = "iPhone";
+      if (!model && os === "iPadOS") model = "iPad";
+      var brand = detectBrand(model, ua);
+
+      /* Arsitektur */
+      var arch = he.architecture || "";
+      var bit = he.bitness || "";
+      if (!arch) {
+        if (/x86_64|x64|Win64|WOW64|amd64/i.test(ua)) { arch = "x86"; bit = bit || "64"; }
+        else if (/aarch64|arm64/i.test(ua)) { arch = "arm"; bit = bit || "64"; }
+        else if (/armv7|armv8|arm/i.test(ua)) { arch = "arm"; }
+        else if (/i[3-6]86|x86/i.test(ua)) { arch = "x86"; bit = bit || "32"; }
+      }
+
+      var tz = net.tz;
+      try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || tz; } catch (e) { }
+
+      return "Device Info: " + ua.replace(/[\[\]\r\n]/g, " ") +
+        " [CLIENT_ID:" + tagSafe(getClientId()) + "]" +
+        " [OS:" + tagSafe(os) + "]" +
+        " [OS_VERSION:" + tagSafe(osVer) + "]" +
+        " [BROWSER:" + tagSafe(browser) + "]" +
+        " [BROWSER_VERSION:" + tagSafe(bVer) + "]" +
+        " [DEVICE_TYPE:" + tagSafe(type) + "]" +
+        " [DEVICE_BRAND:" + tagSafe(brand) + "]" +
+        " [DEVICE_MODEL:" + tagSafe(model) + "]" +
+        " [ARCH:" + tagSafe(arch) + "]" +
+        " [BIT:" + tagSafe(bit) + "]" +
+        " [IP:" + tagSafe(net.ip) + "]" +
+        " [IP_LOC:" + tagSafe(net.loc) + "]" +
+        " [ISP:" + tagSafe(net.isp) + "]" +
+        " [TZ:" + tagSafe(tz) + "]";
+    }
+
+    function getExtraDevice() {
+      var s = window.screen || {};
+      var c = navigator.connection || navigator.mozConnection || navigator.webkitConnection || null;
+      return {
+        screen: (s.width || 0) + "x" + (s.height || 0) + " @" + (window.devicePixelRatio || 1) + "x",
+        connection: c ? [c.effectiveType || "", c.downlink ? c.downlink + " Mbps" : "", c.saveData ? "hemat data" : ""]
+          .filter(Boolean).join(" · ") : "",
+        referrer: document.referrer || ""
+      };
+    }
+
+    /*
+     * Dikirim terpisah dari login dan tidak ditunggu.
+     * Gagal atau lambat pun, santri tidak merasakannya.
+     * eventId yang sama dipakai saat mencoba ulang agar
+     * server tidak mencatat baris ganda.
+     */
+    function sendPortalLog(santriId, opts) {
+      try {
+        var viewedAt = Date.now();
+        var eventId = makeEventId();
+
+        var post = function (body) {
+          var attempt = function (n) {
+            var retry = function () {
+              if (n < 2) setTimeout(function () { attempt(n + 1); }, 3000 * (n + 1));
+            };
+            fetch(CONFIG.API_URL, {
+              method: "POST",
+              headers: { "Content-Type": "text/plain;charset=utf-8" },
+              body: body,
+              redirect: "follow",
+              keepalive: n === 0
+            })
+              .then(function (res) { return res.text(); })
+              .then(function (text) {
+                var res = null;
+                try { res = JSON.parse(text); } catch (e) { }
+                if (res && res.retryable) retry();
+              })
+              .catch(retry);
+          };
+          attempt(0);
+        };
+
+        var start = function () {
+          Promise.all([getHighEntropy(), getNetworkInfo()])
+            .then(function (r) { return buildDeviceInfo(r[0] || {}, r[1] || {}); })
+            .catch(function () { return buildDeviceInfo({}, {}); })
+            .then(function (deviceInfo) {
+              post(JSON.stringify({
+                action: "santri_portal_log",
+                santriId: santriId,
+                eventId: eventId,
+                loginType: opts && opts.silent ? "sesi_tersimpan" : "manual",
+                remember: !!(opts && opts.remember),
+                viewedAt: viewedAt,
+                deviceInfo: deviceInfo,
+                device: getExtraDevice()
+              }));
+            });
+        };
+
+        if (window.requestIdleCallback) requestIdleCallback(start, { timeout: 2000 });
+        else setTimeout(start, 300);
+      } catch (e) { }
+    }
+
+      function loadPortalRanking(data) {
+      if (state.data !== data) return;
+
+      function finish(ranking) {
+        if (state.data !== data) return;
+        data.rankingPending = false;
+        data.ranking = ranking || {};
+
+        var box = document.getElementById("portalRanks");
+        if (!box) return;
+
+        function chip(label, value, title) {
+          return '<span class="chip" title="' + esc(title) + '">' + label + ' ' +
+            (Number.isInteger(value) && value > 0 ? '#' + value : '—') + '</span>';
+        }
+
+        box.innerHTML =
+          chip('Global Rank', data.ranking.globalRank, 'Seluruh santri • capaian seluruh waktu') +
+          chip('Local Rank', data.ranking.localRank,
+            data.ranking.rombel ? 'Rombel ' + data.ranking.rombel : 'Ranking belum tersedia');
+      }
+
+      if (!data.rankingPending) return;
+      if (!data.rankingToken) { finish(null); return; }
+
+      var LIMIT_MS = 90000;
+      var deadline = Date.now() + LIMIT_MS;
+      var delay = 2000;
+      var finished = false;
+      var timeout = setTimeout(function () { complete(null); }, LIMIT_MS);
+
+      function complete(ranking) {
+        if (finished) return;
+        finished = true;
+        clearTimeout(timeout);
+        finish(ranking);
+      }
+
+      function retryLater() {
+        if (finished || state.data !== data) return;
+        if (Date.now() >= deadline) { complete(null); return; }
+        setTimeout(requestRank, delay);
+        delay = Math.min(delay + 1000, 5000);
+      }
+
+      function requestRank() {
+        if (finished || state.data !== data) return;
+
+        callApi({ action: 'santri_portal_rank', rankingToken: data.rankingToken })
+          .then(function (res) {
+            if (finished || state.data !== data) return;
+
+            if (res && res.success && res.pending) { retryLater(); return; }
+
+            complete(res && res.success ? res.ranking : null);
+          })
+          .catch(function (err) {
+            if (finished || state.data !== data) return;
+
+            /* Timeout/koneksi: server mungkin masih membangun ranking. */
+            if (err && (err.code === "TIMEOUT" || err.code === "NETWORK")) {
+              retryLater();
+              return;
+            }
+
+            complete(null);
+          });
+      }
+
+      requestRank();
+    }
+
+    /* ---------- Masuk & muat data ---------- */
+    function loadPortal(id, opts) {
+      opts = opts || {};
+      var body = { action: "santri_portal_login", santriId: id, deferRanking: true };
+      if (opts.periodeId) body.periodeId = opts.periodeId;
+      if (opts.refresh) body.refresh = true;
+
+      showLoading(
+        opts.refresh ? "Memperbarui data" : (opts.periodeId ? "Memuat periode" : (opts.silent ? "Membuka portal" : "Memeriksa ID santri")),
+        opts.periodeId && !opts.refresh ? "Menghitung ulang setoran pada periode ini." : "Mohon tunggu, data setoran sedang disiapkan."
+      );
+
+      return callApi(body).then(function (res) {
+        if (!res || !res.success) {
+          if (opts.silent) { clearSession(); showLogin(); }
+          resetPeriodSelect();
+          var code = (res && res.code) || "ERROR";
+          return Swal.fire({
+            icon: code === "BUSY" || code === "NO_ACCESS" || code === "DISABLED" ? "warning" : "error",
+            title: ERROR_TITLE[code] || "Gagal memuat data",
+            text: (res && res.message) || "Terjadi kesalahan yang tidak diketahui.",
+            confirmButtonText: "Mengerti"
+          }).then(function () {
+            if (!opts.silent && !opts.periodeId) $("#santriIdInput").focus();
+            return false;
+          });
+        }
+
+        var isNewLogin = state.santriId !== res.profile.santriId;
+        state.santriId = res.profile.santriId;
+        state.data = res;
+        if (isNewLogin) { state.filter = "all"; state.query = ""; }
+        state.shown = CONFIG.PAGE_SIZE;
+
+        if (!opts.periodeId && !opts.refresh) writeSession(res.profile.santriId, opts.remember);
+
+        applyBranding(res.branding);
+        renderDashboard();
+        showApp();
+        Swal.close();
+        setTimeout(function () { loadPortalRanking(res); }, 0);
+
+        /* Catat masuk baru; Perbarui dan ganti periode tidak ikut dicatat */
+        if (!opts.periodeId && !opts.refresh) sendPortalLog(res.profile.santriId, opts);
+
+        if (!opts.silent && !opts.periodeId && !opts.refresh) {
+          Toast.fire({ icon: "success", title: "Assalamu'alaikum, " + firstName(res.profile.nama) });
+        } else if (opts.refresh) {
+          Toast.fire({ icon: "success", title: "Data diperbarui" });
+        }
+        return true;
+      }).catch(function (err) {
+        if (opts.silent && err.code !== "NETWORK" && err.code !== "TIMEOUT") { clearSession(); }
+        if (opts.silent) showLogin();
+        resetPeriodSelect();
+        return Swal.fire({
+          icon: "error",
+          title: ERROR_TITLE[err.code] || "Gagal memuat data",
+          text: err.message || String(err),
+          confirmButtonText: "Tutup"
+        }).then(function () { return false; });
+      });
+    }
+
+    function resetPeriodSelect() {
+      var sel = document.getElementById("periodSelect");
+      if (sel && state.data && state.data.periode) sel.value = state.data.periode.id || "ALL";
+    }
+
+    function showLogin() {
+      $("#appView").hidden = true;
+      $("#loginView").hidden = false;
+      window.scrollTo(0, 0);
+    }
+    function showApp() {
+      $("#loginView").hidden = true;
+      $("#appView").hidden = false;
+    }
+
+    /* ---------- Olah data ---------- */
+    function collectRange(text, max) {
+      var set = {};
+      String(text || "").replace(/(\d+)\s*[-–]\s*(\d+)|(\d+)/g, function (m, a, b, c) {
+        if (a && b) {
+          var x = +a, y = +b;
+          if (x > y) { var t = x; x = y; y = t; }
+          if (y - x <= max) for (var i = x; i <= y; i++) if (i >= 1 && i <= max) set[i] = true;
+        } else {
+          var n = +c;
+          if (n >= 1 && n <= max) set[n] = true;
+        }
+        return m;
+      });
+      return Object.keys(set).map(Number);
+    }
+
+    function allEntries(d) {
+      var list = [];
+      [["ziyadah", d.ziyadah], ["murojaah", d.murojaah], ["hadits", d.hadits]].forEach(function (pair) {
+        ((pair[1] && pair[1].entries) || []).forEach(function (e) {
+          var copy = Object.assign({ kind: pair[0] }, e);
+          list.push(copy);
+        });
+      });
+      list.sort(function (a, b) { return (b.ts || 0) - (a.ts || 0); });
+      return list;
+    }
+
+    function juzPageTotal(j) { return j === 1 ? 21 : (j === 30 ? 23 : 20); }
+
+    // Accept mushaf page numbers and page positions within one juz.
+    // Repeated pages count once; jumlah is not unique page coverage.
+   function juzFirstPage(j) { return j === 1 ? 1 : (j - 1) * 20 + 2; }
+
+function entryJuzPages(e, j) {
+  var detail = clean(e.halDetail);
+  var juzs = collectRange(e.juz, 30);
+  if (!detail || /ayat|\bQS\b|surah|surat/i.test(detail)) return null;
+  var multiAbs = false;
+  if (/juz/i.test(detail)) {
+    var segments = detail.split(/(?=juz\s*\d+)/i);
+    var matching = segments.filter(function (part) {
+      var match = part.match(/^juz\s*(\d+)\s*[:=–-]?\s*/i);
+      return match && +match[1] === j;
+    });
+    if (matching.length !== 1) return null;
+    detail = matching[0].replace(/^juz\s*\d+\s*[:=–-]?\s*/i, '').replace(/[;|]\s*$/, '');
+  } else if (juzs.length !== 1) {
+    if (!juzs.length) return null;
+    multiAbs = true; // lintas juz: angka = halaman mushaf absolut
+  }
+  detail = detail.replace(/\b(?:halaman|hal|hlm|pages?)\.?\s*[:=]?\s*/gi, '')
+    .replace(/\s+s\.?d\.?\s+|\s+sampai\s+/gi, '-')
+    .replace(/\s+dan\s+/gi, ',').trim();
+  if (!/^\d+(?:\s*[-–—]\s*\d+)?(?:\s*[,;]\s*\d+(?:\s*[-–—]\s*\d+)?)*$/.test(detail)) return null;
+
+  var total = juzPageTotal(j), pages = {};
+  var firstPage = juzFirstPage(j);
+  var lastPage = firstPage + total - 1;
+
+  if (multiAbs) {
+    var minJ = Math.min.apply(null, juzs), maxJ = Math.max.apply(null, juzs);
+    var lo = juzFirstPage(minJ), hi = juzFirstPage(maxJ) + juzPageTotal(maxJ) - 1;
+    var okAbs = detail.split(/[,;]/).every(function (part) {
+      var b = part.trim().split(/\s*[-–—]\s*/).map(Number);
+      var s = b[0], en = b.length > 1 ? b[1] : s;
+      if (s < lo || en > hi || s > en) return false;
+      for (var n = Math.max(s, firstPage); n <= Math.min(en, lastPage); n++) pages[n - firstPage + 1] = true;
+      return true;
+    });
+    return okAbs ? Object.keys(pages).map(Number) : null;
+  }
+
+  var numbers = detail.match(/\d+/g).map(Number);
+  var mushaf = numbers.every(function (n) { return n >= firstPage && n <= lastPage; });
+  var valid = detail.split(/[,;]/).every(function (part) {
+    var bounds = part.trim().split(/\s*[-–—]\s*/).map(Number);
+    var start = bounds[0], end = bounds.length > 1 ? bounds[1] : start;
+    if (mushaf) { start -= firstPage - 1; end -= firstPage - 1; }
+    if (start < 1 || end > total || start > end) return false;
+    for (var n = start; n <= end; n++) pages[n] = true;
+    return true;
+  });
+  return valid ? Object.keys(pages).map(Number) : null;
+}
+
+    function juzMap(d) {
+      var map = {};
+      for (var i = 1; i <= 30; i++) map[i] = { ziyadah: [], murojaah: [], pages: {}, unresolved: 0, total: juzPageTotal(i) };
+      ["ziyadah", "murojaah"].forEach(function (kind) {
+        ((d[kind] && d[kind].entries) || []).forEach(function (e) {
+          collectRange(e.juz, 30).forEach(function (j) {
+            map[j][kind].push(e);
+            if (kind !== "murojaah") return;
+            var pages = entryJuzPages(e, j);
+            if (pages === null) { map[j].unresolved++; return; }
+            pages.forEach(function (n) { map[j].pages[n] = true; });
+          });
+        });
+      });
+      Object.keys(map).forEach(function (j) {
+        var cell = map[j];
+        cell.done = Object.keys(cell.pages).length;
+        cell.complete = cell.done === cell.total;
+        cell.status = cell.complete ? "Selesai" : (cell.murojaah.length ? "Sedang berjalan" : "Belum dimulai");
+      });
+      return map;
+    }
+
+    function haditsDone(d, max) {
+      var set = {};
+      ((d.hadits && d.hadits.entries) || []).forEach(function (e) {
+        collectRange(e.haditsKe || e.halDetail, max).forEach(function (n) { set[n] = true; });
+      });
+      return set;
+    }
+
+    function avgNilai(entries) {
+      var vals = entries.map(function (e) { return e.nilai; })
+        .filter(function (n) { return n !== null && n !== undefined && isFinite(Number(n)); })
+        .map(Number);
+      if (!vals.length) return null;
+      return vals.reduce(function (a, b) { return a + b; }, 0) / vals.length;
+    }
+
+    function monthly(entries) {
+      var MONTHS = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+      var latest = entries.reduce(function (m, e) { return Math.max(m, e.ts || 0); }, 0);
+      var end = latest ? new Date(latest) : new Date();
+      var buckets = [];
+      for (var i = 5; i >= 0; i--) {
+        var dt = new Date(end.getFullYear(), end.getMonth() - i, 1);
+        buckets.push({
+          key: dt.getFullYear() + "-" + dt.getMonth(),
+          label: MONTHS[dt.getMonth()] + (dt.getMonth() === 0 || i === 5 ? " " + String(dt.getFullYear()).slice(2) : ""),
+          ziyadah: 0, murojaah: 0, hadits: 0
+        });
+      }
+      var index = {};
+      buckets.forEach(function (b) { index[b.key] = b; });
+      entries.forEach(function (e) {
+        if (!e.ts) return;
+        var d = new Date(e.ts);
+        var b = index[d.getFullYear() + "-" + d.getMonth()];
+        if (b) b[e.kind] += 1;
+      });
+      return buckets;
+    }
+
+    function entryTitle(e) {
+      if (e.kind === "hadits") {
+        var ke = clean(e.haditsKe);
+        return ke ? "Hadits ke-" + ke : (clean(e.surah) || "Hadits");
+      }
+      return clean(e.surah) || (clean(e.juz) ? "Juz " + clean(e.juz) : "Setoran Al-Qur'an");
+    }
+    function entryMeta(e) {
+      var parts = [];
+      if (e.kind === "hadits") {
+        parts.push(num(e.jumlah, 0) + " hadits");
+      } else {
+        if (clean(e.juz)) parts.push("Juz " + clean(e.juz));
+        if (clean(e.halDetail)) parts.push(clean(e.halDetail));
+        parts.push(num(e.jumlah, 1) + " hal");
+      }
+      if (clean(e.muhafizh)) parts.push(clean(e.muhafizh));
+      return parts.join(", ");
+    }
+    var KIND_LABEL = { ziyadah: "Ziyadah", murojaah: "Murojaah", hadits: "Hadits" };
+
+    function splitDate(text) {
+      var s = clean(text);
+      var m = s.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})/);
+      if (!m) return { top: s || "-", bottom: "" };
+      var MONTHS = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+      var mon = MONTHS[(+m[2] - 1)] || m[2];
+      return { top: (+m[1]) + " " + mon, bottom: m[3].length === 2 ? "20" + m[3] : m[3] };
+    }
+
+    /* ---------- Foto profil ---------- */
+var FOTO_KEY = "simSantriPortal.foto", FOTO_MAX = 466690;
+function initials(name) {
+  return String(name || "S").trim().split(/\s+/).slice(0, 2).map(function (x) { return x.charAt(0); }).join("").toUpperCase();
+}
+function fotoCacheGet(id) {
+  try { var c = JSON.parse(localStorage.getItem(FOTO_KEY) || "null"); return c && c.id === id && /^data:image\//.test(c.d) ? c.d : ""; }
+  catch (e) { return ""; }
+}
+function fotoCacheSet(id, d) { try { localStorage.setItem(FOTO_KEY, JSON.stringify({ id: id, d: d })); } catch (e) { } }
+function fotoCacheClear() { try { localStorage.removeItem(FOTO_KEY); } catch (e) { } }
+
+function setAvatar(url) {
+  var img = $("#avatarImg"), ini = $("#avatarInit");
+  if (!img || !ini) return;
+  if (url) { img.src = url; img.hidden = false; ini.hidden = true; }
+  else { img.removeAttribute("src"); img.hidden = true; ini.hidden = false; }
+}
+
+function bindFoto() {
+  var id = state.santriId;
+  var button = $("#avatarBtn");
+  var changed = false;
+  var opening = false;
+  var cached = fotoCacheGet(id);
+
+  function isCurrent() {
+    return id === state.santriId &&
+      button === $("#avatarBtn");
+  }
+
+  if (cached) setAvatar(cached);
+
+  callApi({
+    action: "santri_portal_foto_get",
+    santriId: id
+  }).then(function (res) {
+    // Abaikan respons lama setelah pengguna mulai mengubah foto.
+    if (!isCurrent() || changed || !res || !res.success) return;
+
+    if (res.dataUrl) {
+      setAvatar(res.dataUrl);
+      fotoCacheSet(id, res.dataUrl);
+    } else {
+      setAvatar("");
+      fotoCacheClear();
+    }
+  }).catch(function () {});
+
+  button.setAttribute("aria-label", "Kelola foto profil");
+  button.title = "Kelola foto profil";
+
+  button.addEventListener("click", function () {
+    if (opening || !isCurrent()) return;
+    opening = true;
+
+    Swal.fire({
+      title: "Foto profil",
+      text: "Pilih tindakan untuk foto profil santri.",
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: "Tambah / ganti foto",
+      denyButtonText: "Hapus foto",
+      cancelButtonText: "Batal",
+      denyButtonColor: "#dc2626"
+    }).then(function (choice) {
+      if (!isCurrent()) return;
+
+      if (choice.isConfirmed) {
+        changed = true;
+        $("#fotoInput").click();
+        return;
+      }
+
+      if (!choice.isDenied) return;
+
+      return Swal.fire({
+        icon: "warning",
+        title: "Hapus foto profil?",
+        text: "Foto akan diganti dengan inisial nama santri.",
+        showCancelButton: true,
+        confirmButtonText: "Ya, hapus",
+        cancelButtonText: "Batal",
+        confirmButtonColor: "#dc2626",
+        showLoaderOnConfirm: true,
+        allowOutsideClick: function () {
+          return !Swal.isLoading();
+        },
+        allowEscapeKey: function () {
+          return !Swal.isLoading();
+        },
+        preConfirm: function () {
+          if (!isCurrent()) {
+            Swal.showValidationMessage("Halaman berubah. Buka ulang menu foto.");
+            return false;
+          }
+
+          changed = true;
+
+          return callApi({
+            action: "santri_portal_foto_delete",
+            santriId: id
+          }).then(function (res) {
+            if (!res || !res.success) {
+              Swal.showValidationMessage(
+                (res && res.message) || "Foto gagal dihapus."
+              );
+              return false;
+            }
+            return res;
+          }).catch(function () {
+            Swal.showValidationMessage(
+              "Koneksi bermasalah. Muat ulang untuk memeriksa hasil penghapusan."
+            );
+            return false;
+          });
+        }
+      }).then(function (result) {
+        if (!result.isConfirmed || !result.value || !isCurrent()) return;
+
+        setAvatar("");
+        fotoCacheClear();
+        $("#fotoInput").value = "";
+
+        Toast.fire({
+          icon: "success",
+          title: "Foto profil berhasil dihapus"
+        });
+      });
+    }).finally(function () {
+      opening = false;
+    });
+  });
+}
+
+function loadHeic() {
+  return new Promise(function (ok, fail) {
+    if (window.heic2any) return ok();
+    var s = document.createElement("script");
+    s.src = "https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js";
+    s.onload = ok; s.onerror = function () { fail(new Error("Gagal memuat konverter HEIC.")); };
+    document.head.appendChild(s);
+  });
+}
+
+function openCropper(blob) {
+  var url = URL.createObjectURL(blob), im = new Image();
+  im.onerror = function () {
+    URL.revokeObjectURL(url);
+    Swal.fire({ icon: "error", title: "Foto tidak bisa dibaca", confirmButtonText: "Tutup" });
+  };
+  im.onload = function () {
+    URL.revokeObjectURL(url);
+    var V = 280, zoomVal = 1, ox = 0, oy = 0, drag = null, canvas, zoom;
+    function base() { return V / Math.min(im.naturalWidth, im.naturalHeight); }
+    function clamp() {
+      var s = base() * zoomVal;
+      ox = Math.min(0, Math.max(V - im.naturalWidth * s, ox));
+      oy = Math.min(0, Math.max(V - im.naturalHeight * s, oy));
+    }
+    function paint(ctx, size, mask) {
+      var k = size / V, s = base() * zoomVal;
+      ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, size, size);
+      ctx.drawImage(im, ox * k, oy * k, im.naturalWidth * s * k, im.naturalHeight * s * k);
+      if (mask) {
+        ctx.save();
+        ctx.fillStyle = "rgba(0,0,0,0.5)";
+        ctx.beginPath(); ctx.rect(0, 0, size, size);
+        ctx.arc(size / 2, size / 2, size / 2 - 2, 0, Math.PI * 2, true);
+        ctx.fill("evenodd");
+        ctx.restore();
+      }
+    }
+    function redraw() { paint(canvas.getContext("2d"), V, true); }
+
+    Swal.fire({
+      title: "Atur foto profil",
+      html: '<p style="margin:0 0 4px;font-size:14px">Geser foto, lalu atur zoom.</p>' +
+        '<canvas id="cropCanvas" class="crop-canvas" width="280" height="280" aria-label="Area pemotongan foto"></canvas>' +
+        '<input id="cropZoom" class="crop-zoom" type="range" min="1" max="3" step="0.01" value="1" aria-label="Zoom foto">',
+      showCancelButton: true, confirmButtonText: "Simpan foto", cancelButtonText: "Batal",
+      reverseButtons: true, allowOutsideClick: false, showLoaderOnConfirm: true,
+      didOpen: function () {
+        canvas = document.getElementById("cropCanvas");
+        zoom = document.getElementById("cropZoom");
+        ox = (V - im.naturalWidth * base()) / 2;
+        oy = (V - im.naturalHeight * base()) / 2;
+        clamp(); redraw();
+        zoom.oninput = function () {
+          var oldS = base() * zoomVal, cx = (V / 2 - ox) / oldS, cy = (V / 2 - oy) / oldS;
+          zoomVal = Number(zoom.value) || 1;
+          var newS = base() * zoomVal;
+          ox = V / 2 - cx * newS; oy = V / 2 - cy * newS;
+          clamp(); redraw();
+        };
+        canvas.onpointerdown = function (e) {
+          drag = { x: e.clientX, y: e.clientY, ox: ox, oy: oy };
+          try { canvas.setPointerCapture(e.pointerId); } catch (x) { }
+        };
+        canvas.onpointermove = function (e) {
+          if (!drag) return;
+          var ratio = V / canvas.getBoundingClientRect().width;
+          ox = drag.ox + (e.clientX - drag.x) * ratio;
+          oy = drag.oy + (e.clientY - drag.y) * ratio;
+          clamp(); redraw();
+        };
+        canvas.onpointerup = canvas.onpointercancel = function () { drag = null; };
+      },
+      preConfirm: function () {
+        var out = document.createElement("canvas"); out.width = out.height = 512;
+        paint(out.getContext("2d"), 512, false);
+        var d = out.toDataURL("image/jpeg", 0.85);
+        if (d.length > FOTO_MAX) d = out.toDataURL("image/jpeg", 0.65);
+        if (d.length > FOTO_MAX) { Swal.showValidationMessage("Foto terlalu besar. Pilih foto lain."); return false; }
+        return callApi({ action: "santri_portal_foto_save", santriId: state.santriId, dataUrl: d })
+          .then(function (res) {
+            if (!res || !res.success) { Swal.showValidationMessage((res && res.message) || "Foto gagal disimpan."); return false; }
+            return res.dataUrl || d;
+          })
+          .catch(function (err) { Swal.showValidationMessage(err.message || "Koneksi bermasalah."); return false; });
+      }
+    }).then(function (r) {
+      if (r.isConfirmed && r.value) {
+        setAvatar(r.value); fotoCacheSet(state.santriId, r.value);
+        Toast.fire({ icon: "success", title: "Foto profil disimpan" });
+      }
+    });
+  };
+  im.src = url;
+}
+
+$("#fotoInput").addEventListener("change", function () {
+  var file = this.files[0]; this.value = "";
+  if (!file) return;
+  var heic = /^image\/(heic|heif)$/.test(file.type) || /\.(heic|heif)$/i.test(file.name);
+  if (!heic && !/^image\/(jpeg|png|webp)$/.test(file.type)) {
+    Swal.fire({ icon: "info", title: "Format belum didukung", text: "Gunakan foto JPG, PNG, WebP, atau HEIC.", confirmButtonText: "Mengerti" });
+    return;
+  }
+  if (file.size > 10 * 1024 * 1024) {
+    Swal.fire({ icon: "info", title: "Foto terlalu besar", text: "Ukuran foto maksimal 10 MB.", confirmButtonText: "Mengerti" });
+    return;
+  }
+  if (!heic) return openCropper(file);
+  showLoading("Menyiapkan foto");
+  loadHeic()
+    .then(function () { return heic2any({ blob: file, toType: "image/jpeg", quality: 0.85 }); })
+    .then(function (out) { Swal.close(); openCropper(Array.isArray(out) ? out[0] : out); })
+    .catch(function (e) { Swal.fire({ icon: "error", title: "Foto HEIC gagal diproses", text: e.message || "", confirmButtonText: "Tutup" }); });
+});
+
+    /* ---------- Render ---------- */
+    function renderDashboard() {
+      var d = state.data;
+      var p = d.profile;
+      var z = d.ziyadah || {}, m = d.murojaah || {}, h = d.hadits || {};
+      var entries = allEntries(d);
+      var jm = juzMap(d);
+      var juzTouched = Object.keys(jm).filter(function (k) { return jm[k].ziyadah.length || jm[k].murojaah.length; }).length;
+      var avg = avgNilai(entries);
+      var targetJuz = d.target.quranJuz || z.targetQuranJuz || 30;
+      var targetHadits = Math.min(60, Math.max(1, d.target.hadits || h.targetHadits || 42));
+      var hSet = haditsDone(d, targetHadits);
+      var hCount = Object.keys(hSet).length;
+
+      var periodOptions = ['<option value="ALL">Semua periode</option>'].concat(
+        (d.periods || []).map(function (per) {
+          return '<option value="' + esc(per.id) + '">' + esc(per.label) + (per.aktif ? " (aktif)" : "") + "</option>";
+        })
+      ).join("");
+
+      var statusChip = p.active
+        ? '<span class="chip chip-ok">Santri aktif</span>'
+        : '<span class="chip chip-warn">Status: ' + esc(p.status || "Tidak aktif") + "</span>";
+
+      var muhafizhText = (p.muhafizh && p.muhafizh.length) ? p.muhafizh.join(", ") : "";
+
+      /* grid 30 juz */
+      var juzCells = "";
+      for (var j = 1; j <= 30; j++) {
+        var cell = jm[j];
+        var cls = cell.complete ? "mur" : (cell.murojaah.length ? "mur-progress" : (cell.ziyadah.length ? "ziy" : ""));
+        var countLabel = cell.done + "/" + cell.total;
+        var label = "Juz " + j + ": murojaah " + countLabel + " halaman, " + cell.status;
+        juzCells += '<button type="button" class="juz-cell ' + cls + '" data-juz="' + j + '" aria-label="' + esc(label) + '" title="' + esc(label) + '">' +
+          '<span>' + j + '</span></button>';
+      }
+
+      /* grid hadits */
+      var hCells = "";
+      for (var k = 1; k <= targetHadits; k++) {
+        hCells += '<span class="h-cell' + (hSet[k] ? " on" : "") + '" title="Hadits ke-' + k + (hSet[k] ? " sudah disetorkan" : " belum") + '">' + k + "</span>";
+      }
+
+      /* grafik bulanan */
+      var months = monthly(entries);
+      var peak = months.reduce(function (mx, b) { return Math.max(mx, b.ziyadah + b.murojaah + b.hadits); }, 0) || 1;
+      var chart = months.map(function (b) {
+        var total = b.ziyadah + b.murojaah + b.hadits;
+        var hPct = Math.round((total / peak) * 100);
+        function seg(v, c) { return v ? '<span class="' + c + '" style="flex:' + v + '"></span>' : ""; }
+        return '<div class="col" title="' + esc(b.label + ": " + b.ziyadah + " ziyadah, " + b.murojaah + " murojaah, " + b.hadits + " hadits") + '">' +
+          '<div class="col-total">' + total + "</div>" +
+          '<div class="stack" style="height:' + Math.max(hPct * 0.78, 2) + '%">' +
+          seg(b.ziyadah, "s-ziy") + seg(b.murojaah, "s-mur") + seg(b.hadits, "s-had") +
+          "</div>" +
+          '<div class="col-label">' + esc(b.label) + "</div></div>";
+      }).join("");
+
+      function track(title, s, unit, big, extra) {
+        return '<div class="track">' +
+          "<h3>" + esc(title) + "</h3>" +
+          '<div class="num">' + big + "<small>" + esc(unit) + "</small></div>" +
+          "<dl>" +
+          "<dt>Setoran</dt><dd>" + num(s.jumlahSetoran, 0) + " kali</dd>" +
+          "<dt>Rata-rata grade</dt><dd>" + esc(s.avgGrade || "-") + "</dd>" +
+          "<dt>Terakhir</dt><dd>" + esc(clean(s.latestDateText) || "Belum ada") + "</dd>" +
+          (extra || "") +
+          "</dl>" +
+          '<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + Math.round(s.coveragePct || 0) + '"><span style="width:' + (s.coveragePct || 0) + '%"></span></div>' +
+          '<div class="bar-note">Capaian ' + esc(s.coverageLabel || "-") + "</div>" +
+          "</div>";
+      }
+
+      var truncated = (z.entriesTruncated || m.entriesTruncated || h.entriesTruncated)
+        ? '<p class="panel-sub">Menampilkan riwayat terbaru saja. Riwayat lengkap tersedia di rapor.</p>' : "";
+
+      var ranking = d.ranking || {};
+      function rankChip(label, value, title) {
+        if (d.rankingPending) return '<span class="chip rank-loading" aria-label="' + label + ' sedang dimuat">' + label + '<span class="rank-skeleton" aria-hidden="true"></span></span>';
+        var valid = Number.isInteger(value) && value > 0;
+        return '<span class="chip" title="' + esc(title) + '">' + label + ' ' + (valid ? '#' + value : '—') + '</span>';
+      }
+
+      $("#dashboard").innerHTML =
+        '<section class="identity">' +
+          "<div>" +
+            '<p class="greet">Assalamu\'alaikum,</p>' +
+                      '<div class="profile-row">' +
+              '<button type="button" class="avatar" id="avatarBtn" aria-label="Tambah atau ganti foto profil" title="Tambah atau ganti foto profil">' +
+                '<img id="avatarImg" alt="Foto profil" hidden><span id="avatarInit">' + esc(initials(p.nama)) + '</span>' +
+                '<span class="cam" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h4l2-3h4l2 3h4v13H4z"/><circle cx="12" cy="13" r="4"/></svg></span>' +
+              '</button>' +
+              '<div class="profile-info">' +
+                "<h1>" + esc(p.nama) + "</h1>" +
+                '<div id="portalRanks" class="chips profile-ranks" aria-label="Peringkat santri" aria-live="polite">' +
+                  rankChip('Global Rank', ranking.globalRank, 'Seluruh santri • capaian seluruh waktu') +
+                  rankChip('Local Rank', ranking.localRank, ranking.rombel ? 'Rombel ' + ranking.rombel + ' • capaian seluruh waktu' : 'Rombel belum tersedia') +
+                '</div>' +
+              '</div>' +
+            "</div>" +
+            '<div class="chips">' +
+              '<span class="chip">Kelas ' + esc(p.kelas || "-") + "</span>" +
+              statusChip +
+              '<button type="button" class="chip chip-id" id="copyIdBtn" title="Salin ID santri">' + esc(p.santriId) + "</button>" +
+            "</div>" +
+          "</div>" +
+          '<div class="period-box">' +
+            '<label for="periodSelect">Periode</label>' +
+            '<select id="periodSelect">' + periodOptions + "</select>" +
+          "</div>" +
+        "</section>" +
+
+        '<section class="panel mushaf" aria-labelledby="mushafTitle">' +
+          '<div class="mushaf-top">' +
+            "<div>" +
+              '<h2 id="mushafTitle" class="sr-only">Peta setoran 30 juz</h2>' +
+            '<div class="juz-big">' + num(m.totalHalaman, 1) + "<small>halaman</small></div>" +
+'<div class="juz-caption">Total murojaah yang telah dilakukan pada ' + esc(d.periode.label.toLowerCase() === "semua periode" ? "seluruh periode" : "periode " + d.periode.label) + ". Ketuk juz untuk melihat progres murojaah.</div>" +
+            "</div>" +
+            '<div class="figs">' +
+              '<div class="fig"><b>' + juzTouched + "</b><span>juz disetorkan</span></div>" +
+              '<div class="fig"><b>' + num(entries.length, 0) + "</b><span>total setoran</span></div>" +
+              '<div class="fig"><b>' + (avg === null ? "-" : num(avg, 2)) + "</b><span>rata-rata nilai</span></div>" +
+            "</div>" +
+          "</div>" +
+          '<div class="juz-grid">' + juzCells + "</div>" +
+          '<div class="legend">' +
+           '<span><i class="l-mur"></i>Murojaah selesai</span>' +
+           '<span><i class="l-progress"></i>Murojaah sedang berjalan</span>' +
+'<span><i class="l-ziy"></i>Hanya ziyadah</span>' +
+            '<span><i class="l-none"></i>Belum ada setoran</span>' +
+          "</div>" +
+        "</section>" +
+
+        '<section class="panel" style="margin-top:20px" aria-labelledby="trackTitle">' +
+          '<div class="panel-head"><div><h2 id="trackTitle">Rincian setoran</h2><p class="panel-sub">Dihitung dari setoran yang dicatat muhafizh.</p></div></div>' +
+          '<div class="tracks">' +
+            track("Ziyadah", z, "halaman", num(z.totalHalaman, 1)) +
+            track("Murojaah", m, "halaman", num(m.totalHalaman, 1)) +
+            track("Hadits Arbain", h, "hadits", num(h.totalHadits, 0)) +
+          "</div>" +
+        "</section>" +
+
+        '<div class="grid-2">' +
+          '<section class="panel" aria-labelledby="chartTitle">' +
+            '<div class="panel-head"><div><h2 id="chartTitle">Aktivitas enam bulan</h2><p class="panel-sub">Jumlah setoran per bulan.</p></div></div>' +
+            '<div class="chart">' + chart + "</div>" +
+            '<div class="chart-legend"><span><i class="s-ziy"></i>Ziyadah</span><span><i class="s-mur"></i>Murojaah</span><span><i class="s-had"></i>Hadits</span></div>' +
+          "</section>" +
+          '<section class="panel" aria-labelledby="targetTitle">' +
+            '<div class="panel-head"><div><h2 id="targetTitle">Target dan catatan</h2></div></div>' +
+            '<dl class="kv">' +
+              "<dt>Target Al-Qur'an</dt><dd>" + num(targetJuz, 0) + " juz</dd>" +
+              "<dt>Target hadits</dt><dd>" + num(targetHadits, 0) + " hadits</dd>" +
+              (muhafizhText ? "<dt>Muhafizh kelas</dt><dd>" + esc(muhafizhText) + "</dd>" : "") +
+            "</dl>" +
+            (clean(d.target.catatan)
+              ? '<p class="note">' + esc(d.target.catatan) + "</p>"
+              : '<p class="note-empty">Belum ada catatan dari muhafizh.</p>') +
+          "</section>" +
+        "</div>" +
+
+        '<section class="panel" aria-labelledby="haditsTitle">' +
+          '<div class="panel-head"><div><h2 id="haditsTitle">Hadits yang sudah disetorkan</h2><p class="panel-sub">' + hCount + " dari " + targetHadits + " hadits.</p></div></div>" +
+          '<div class="hadits-grid">' + hCells + "</div>" +
+        "</section>" +
+
+        '<section class="panel" aria-labelledby="historyTitle">' +
+          '<div class="panel-head"><div><h2 id="historyTitle">Riwayat setoran</h2>' + truncated + "</div></div>" +
+          '<div class="toolbar">' +
+            '<div class="seg" role="group" aria-label="Saring jenis setoran">' +
+              segBtn("all", "Semua") + segBtn("ziyadah", "Ziyadah") + segBtn("murojaah", "Murojaah") + segBtn("hadits", "Hadits") +
+            "</div>" +
+            '<input class="search" id="historySearch" type="search" placeholder="Cari surah, juz, atau muhafizh" value="' + esc(state.query) + '" aria-label="Cari riwayat">' +
+          "</div>" +
+          '<ul class="rows" id="historyList"></ul>' +
+          '<div class="more" id="moreWrap"></div>' +
+        "</section>" +
+
+        '<p class="foot">Data diperbarui ' + esc(d.generatedAt) + (d.branding && d.branding.footerText ? "<br>" + esc(d.branding.footerText) : "") + "</p>";
+
+      $("#periodSelect").value = d.periode.id || "ALL";
+      state._entries = entries;
+      state._juz = jm;
+      renderHistory();
+      bindDashboard();
+     bindFoto();
+    }
+
+    function segBtn(value, label) {
+      return '<button type="button" data-filter="' + value + '" aria-pressed="' + (state.filter === value) + '">' + label + "</button>";
+    }
+
+    function filteredEntries() {
+      var q = state.query.trim().toLowerCase();
+      return (state._entries || []).filter(function (e) {
+        if (state.filter !== "all" && e.kind !== state.filter) return false;
+        if (!q) return true;
+        return [entryTitle(e), e.juz, e.halDetail, e.muhafizh, e.tanggal, e.grade, KIND_LABEL[e.kind]]
+          .join(" ").toLowerCase().indexOf(q) >= 0;
+      });
+    }
+
+    function renderHistory() {
+      var list = filteredEntries();
+      var visible = list.slice(0, state.shown);
+      var ul = $("#historyList");
+
+      if (!list.length) {
+        ul.innerHTML = '<li class="empty">' +
+          (state.query ? "Tidak ada setoran yang cocok dengan pencarian ini." :
+            "Belum ada setoran " + (state.filter === "all" ? "" : KIND_LABEL[state.filter].toLowerCase() + " ") + "pada periode ini. Coba pilih periode lain.") +
+          "</li>";
+      } else {
+        ul.innerHTML = visible.map(function (e, i) {
+          var dt = splitDate(e.tanggal);
+          return '<li class="row" tabindex="0" role="button" data-idx="' + i + '">' +
+            '<div class="row-date"><b>' + esc(dt.top) + "</b>" + esc(dt.bottom) + "</div>" +
+            '<div class="row-main">' +
+              '<div class="row-title"><span class="kind k-' + e.kind + '" aria-hidden="true"></span>' + esc(entryTitle(e)) + "</div>" +
+              '<div class="row-meta">' + esc(KIND_LABEL[e.kind]) + ", " + esc(entryMeta(e)) + "</div>" +
+            "</div>" +
+            '<span class="grade">' + esc(clean(e.grade) || "-") + "</span>" +
+            "</li>";
+        }).join("");
+      }
+
+      var more = $("#moreWrap");
+      if (list.length > state.shown) {
+        more.innerHTML = '<button type="button" class="btn btn-ghost btn-sm" id="moreBtn">Tampilkan ' +
+          Math.min(CONFIG.PAGE_SIZE, list.length - state.shown) + " lagi (" + (list.length - state.shown) + " tersisa)</button>";
+        $("#moreBtn").onclick = function () { state.shown += CONFIG.PAGE_SIZE; renderHistory(); };
+      } else {
+        more.innerHTML = "";
+      }
+
+      $$(".row", ul).forEach(function (row) {
+        var open = function () { showEntry(visible[+row.getAttribute("data-idx")]); };
+        row.addEventListener("click", open);
+        row.addEventListener("keydown", function (ev) {
+          if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); open(); }
+        });
+      });
+    }
+
+    function showEntry(e) {
+      if (!e) return;
+      var rows = [
+        ["Jenis", KIND_LABEL[e.kind]],
+        ["Tanggal", clean(e.tanggal) || "-"]
+      ];
+      if (e.kind === "hadits") {
+        rows.push(["Hadits ke", clean(e.haditsKe) || "-"]);
+        rows.push(["Jumlah", num(e.jumlah, 0) + " hadits"]);
+      } else {
+        rows.push(["Surah", clean(e.surah) || "-"]);
+        rows.push(["Juz", clean(e.juz) || "-"]);
+        if (clean(e.halDetail)) rows.push(["Halaman / ayat", clean(e.halDetail)]);
+        rows.push(["Jumlah", num(e.jumlah, 1) + " halaman"]);
+      }
+      rows.push(["Grade", clean(e.grade) || "-"]);
+      rows.push(["Nilai", e.nilai === null || e.nilai === undefined ? "-" : num(e.nilai, 2)]);
+      rows.push(["Muhafizh", clean(e.muhafizh) || "-"]);
+
+      Swal.fire({
+        title: entryTitle(e),
+        html: '<table class="detail-table">' + rows.map(function (r) {
+          return "<tr><th>" + esc(r[0]) + "</th><td>" + esc(r[1]) + "</td></tr>";
+        }).join("") + "</table>",
+        confirmButtonText: "Tutup"
+      });
+    }
+
+    function showJuz(j) {
+      var cell = state._juz && state._juz[j];
+      if (!cell) return;
+      var items = cell.ziyadah.map(function (e) { return Object.assign({}, e, { kind: "ziyadah" }); })
+        .concat(cell.murojaah.map(function (e) { return Object.assign({}, e, { kind: "murojaah" }); }))
+        .sort(function (a, b) { return (b.ts || 0) - (a.ts || 0); });
+      Swal.fire({
+        title: "Juz " + j,
+        html: '<div style="font-size:32px;font-weight:800;color:var(--deep)">' + cell.done + '/' + cell.total + ' <span style="font-size:16px">halaman</span></div>' +
+          '<p style="margin:8px 0;font-weight:700;color:var(--deep)">' + cell.status + '</p>' +
+          '<p style="margin:0">Sisa ' + (cell.total - cell.done) + ' halaman</p>' +
+          (cell.unresolved && !cell.complete ? '<p style="font-size:13px">Sebagian rincian halaman belum terbaca.</p>' : '') +
+          '<p style="margin:12px 0">' + cell.ziyadah.length + ' setoran ziyadah dan ' + cell.murojaah.length + ' murojaah.</p>' +
+          (items.length ? '<ul class="juz-list">' + items.map(function (e) {
+            return '<li><b>' + esc(entryTitle(e)) + '<br><small>' + esc(clean(e.halDetail) || '—') + '</small></b><span>' +
+              esc(KIND_LABEL[e.kind]) + ', ' + esc(clean(e.tanggal) || '—') + ', grade ' + esc(clean(e.grade) || '—') + '</span></li>';
+          }).join('') + '</ul>' : '<p>Belum ada setoran pada periode ini.</p>'),
+        confirmButtonText: "Tutup"
+      });
+    }
+
+    function bindDashboard() {
+      $("#periodSelect").addEventListener("change", function (ev) {
+        loadPortal(state.santriId, { periodeId: ev.target.value });
+      });
+
+      $$(".seg button").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          state.filter = btn.getAttribute("data-filter");
+          state.shown = CONFIG.PAGE_SIZE;
+          $$(".seg button").forEach(function (b) { b.setAttribute("aria-pressed", String(b === btn)); });
+          renderHistory();
+        });
+      });
+
+      var searchTimer = null;
+      $("#historySearch").addEventListener("input", function (ev) {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(function () {
+          state.query = ev.target.value;
+          state.shown = CONFIG.PAGE_SIZE;
+          renderHistory();
+        }, 180);
+      });
+
+      $$(".juz-cell").forEach(function (cell) {
+        cell.addEventListener("click", function () { showJuz(+cell.getAttribute("data-juz")); });
+      });
+
+      $("#copyIdBtn").addEventListener("click", function () {
+        var id = state.santriId;
+        var done = function () { Toast.fire({ icon: "success", title: "ID santri disalin" }); };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(id).then(done, function () {
+            Swal.fire({ title: "ID santri", text: id, confirmButtonText: "Tutup" });
+          });
+        } else {
+          Swal.fire({ title: "ID santri", text: id, confirmButtonText: "Tutup" });
+        }
+      });
+    }
+
+    /* ---------- Event global ---------- */
+    $("#loginForm").addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      var id = normalizeId($("#santriIdInput").value);
+      if (!id) {
+        Swal.fire({ icon: "info", title: "ID belum diisi", text: "Ketik ID santri kamu, misalnya SNT-1A2B3C4D5E6F.", confirmButtonText: "Mengerti" })
+          .then(function () { $("#santriIdInput").focus(); });
+        return;
+      }
+      if (!/^SNT-[A-Z0-9]{3,32}$/.test(id)) {
+        Swal.fire({ icon: "error", title: "Format ID belum sesuai", text: "ID santri berisi huruf dan angka setelah SNT-, tanpa spasi.", confirmButtonText: "Perbaiki" })
+          .then(function () { $("#santriIdInput").focus(); });
+        return;
+      }
+      loadPortal(id, { remember: $("#rememberInput").checked });
+    });
+
+    /* Tempel "SNT-XXXX" utuh tetap rapi karena prefix sudah tercetak */
+    $("#santriIdInput").addEventListener("input", function (ev) {
+      var v = ev.target.value.toUpperCase();
+      var stripped = v.replace(/^\s*SNT-?/, "");
+      if (stripped !== ev.target.value) ev.target.value = stripped;
+    });
+
+    $("#logoutBtn").addEventListener("click", function () {
+      Swal.fire({
+        icon: "question",
+        title: "Keluar dari portal?",
+        text: "ID santri akan dihapus dari perangkat ini.",
+        showCancelButton: true,
+        confirmButtonText: "Keluar",
+        cancelButtonText: "Batal",
+        reverseButtons: true
+      }).then(function (r) {
+        if (!r.isConfirmed) return;
+        clearSession();
+        state.santriId = ""; state.data = null; state.filter = "all"; state.query = "";
+        $("#dashboard").innerHTML = "";
+        $("#santriIdInput").value = "";
+        $("#rememberInput").checked = false;
+                fotoCacheClear();
+        showLogin();
+        Toast.fire({ icon: "success", title: "Kamu sudah keluar" });
+      });
+    });
+
+    $("#refreshBtn").addEventListener("click", function () {
+      if (!state.santriId) return;
+      var per = state.data && state.data.periode ? state.data.periode.id : "";
+      loadPortal(state.santriId, { refresh: true, periodeId: per || undefined });
+    });
+
+    $("#printBtn").addEventListener("click", function () { window.print(); });
+
+    /* ---------- Mulai ---------- */
+    applyBranding(readStore(CONFIG.BRAND_KEY));
+
+    var saved = readStore(CONFIG.SESSION_KEY);
+    var fromUrl = normalizeId(new URLSearchParams(location.search).get("id") || "");
+
+    if (fromUrl) {
+      /* ?id=SNT-XXXX hanya mengisi kolom, tidak langsung masuk */
+      history.replaceState(null, "", location.pathname);
+      showLogin();
+      $("#santriIdInput").value = fromUrl.replace(/^SNT-/, "");
+    } else if (saved && saved.id) {
+      $("#rememberInput").checked = !!saved.remember;
+      loadPortal(saved.id, { silent: true, remember: saved.remember });
+    } else {
+      showLogin();
+      setTimeout(function () { $("#santriIdInput").focus(); }, 60);
+    }
+  })();
+  </script>
+</body>
+</html>
